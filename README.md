@@ -1,2 +1,2 @@
-# star_wars_car_shop
-A website to buy cars from Star Wars
+# Star Wars Vehicles Shop
+A website to buy vehicles from Star Wars
