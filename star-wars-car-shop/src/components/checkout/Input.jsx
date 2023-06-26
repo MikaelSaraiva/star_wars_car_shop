@@ -1,8 +1,8 @@
 import React from 'react'
 
-function Input({ type, text, name, placeholder, handleOnChange, value }) {
+function Input({ type, text, name, placeholder, handleOnChange, value, id }) {
     return (
-        <div className="input">
+        <div className={id}>
             <label htmlFor={name}>{text}</label>
             <input
                 type={type}
