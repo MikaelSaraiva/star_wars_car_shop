@@ -1,16 +1,32 @@
-// import { useEffect } from "react"
+const addressForm = document.querySelector('#address-info')
+const nameInput = document.querySelector('#name')
+const emailInput = document.querySelector('#email')
+const phoneInput = document.querySelector('#phone')
+const cpf_cnpjInput = document.querySelector('#cpf_cnpj')
+const zipcodeInput = document.getElementById("zipcode")
+const addressInput = document.querySelector('#address')
+const numberInput = document.querySelector('#number')
+const address2Input = document.querySelector('#address2')
+const cityInput = document.querySelector('#city')
+const neighborhoodInput = document.querySelector('#neighborhood')
+const stateInput = document.querySelector('#state')
 
-const name = document.querySelector('#name')
-const email = document.querySelector('#email')
-const phone = document.querySelector('#phone')
-const cpf_cnpj = document.querySelector('#cpf_cnpj')
-const zipcode = document.getElementById("zipcode")
-const address = document.querySelector('#address')
-const number = document.querySelector('#number')
-const address2 = document.querySelector('#address2')
-const city = document.querySelector('#city')
-const neighborhood = document.querySelector('#neighborhood')
-const state = document.querySelector('#state')
+
+// Função para desabilitar/habilitar as caixas de texto do fomulario de endereço
+
+const toggleDisabled = () => {
+    if (addressInput.hasAttribute('disabled')) {
+        Array.from(addressForm).forEach((input) => {
+            input.removeAttribute('disabled')
+        });
+    } else {
+        Array.from(addressForm).forEach((input) => {
+            input.setAttribute('disabled', 'disable')
+        });
+    }
+}
+
+toggleDisabled()
 
 // Verificador generico se o campo foi preenchido
 
@@ -21,7 +37,7 @@ function isFilled(field) {
 
 // Verifica se possui a estrutura de um e-mail
 
-function isEmailValid(email) {
+function isemailValid(email) {
 
     if (!isFilled(email)) return false
 
@@ -158,16 +174,66 @@ function isCPFCNPJValid(cpf_cnpj) {
     return true;
 }
 
-// Verifica se é um cep valido e retorna as informações atribuidas a ele
+// Limita o usuario a enviar apenas números
 
-zipcode.addEventListener('keypress', (event) => {
-    console.log("OH DEUS")
+zipcodeInput.addEventListener('keypress', (event) => {
     const olyNumbers = /[0-9]/
-    const key = String.fromCharCode(event.keyCode)
+    const key = event.key
 
     if (!olyNumbers.test(key)) {
         event.preventDefault()
 
         return
     }
-}) 
+})
+
+// Aguarda o usuário preencher o CEP
+
+zipcodeInput.addEventListener('keyup', (event) => {
+    const inputValue = event.target.value
+
+
+    if (inputValue.length >= 8) {
+
+        getAddres(String(inputValue).replace(/[^0-9]/g, ''))
+
+        return
+
+    }
+})
+
+// Prenche os dados de endereço baseado no CEP do usuário usando o ViaCep
+
+const getAddres = async (zipcode) => {
+    zipcodeInput.setAttribute('disabled', 'disabled')
+
+    const url = `https://viacep.com.br/ws/${zipcode}/json/`
+    console.log(url)
+
+    const response = await fetch(url)
+
+    const data = await response.json()
+
+    if (data.erro === true) {
+        addressForm.reset()
+        zipcodeInput.removeAttribute('disabled')
+
+        if (!addressInput.hasAttribute('disabled')) {
+            toggleDisabled()
+        }
+
+        return
+    }
+
+    if (addressInput.value === '') {
+        toggleDisabled()
+    }
+
+    addressInput.value = data.logradouro
+    neighborhoodInput.value = data.bairro
+    cityInput.value = data.localidade
+    stateInput.value = data.uf
+
+    zipcodeInput.removeAttribute('disabled')
+
+}
