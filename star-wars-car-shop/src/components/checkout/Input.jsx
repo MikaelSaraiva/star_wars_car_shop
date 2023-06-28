@@ -1,6 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
+import './input.css'
 
-function Input({ type, text, name, placeholder, handleOnChange, value }) {
+function Input({ type, text, name, placeholder, handleOnChange, value, errorMessage, required }) {
+    const [focused, setFocused] = useState(false)
+
+    const handleFocus = (event) => {
+        setFocused(true)
+    }
+
     return (
         <div className={name}>
             <label htmlFor={name}>{text}</label>
@@ -11,7 +18,11 @@ function Input({ type, text, name, placeholder, handleOnChange, value }) {
                 placeholder={placeholder}
                 onChange={handleOnChange}
                 value={value}
+                required={Boolean(required)}
+                onBlur={handleFocus}
+                focused={focused.toString()}
             />
+            <span>{errorMessage}</span>
         </div>
     )
 }

@@ -37,7 +37,7 @@ function isFilled(field) {
 
 // Verifica se possui a estrutura de um e-mail
 
-function isemailValid(email) {
+function isEmailValid(email) {
 
     if (!isFilled(email)) return false
 
@@ -50,45 +50,30 @@ function isemailValid(email) {
     return false
 }
 
-// Verifica se possui a quantidade de digitos de um telefone (00 99999 8888)
-
-function isPhoneValid(phone) {
-
-    if (!isFilled(phone)) return false
-
-    const phoneRegex = new RegExp(
-        /^[0-9]{11,}$/
-    )
-
-    if (phoneRegex.test(phone)) return true
-
-    return false
-}
-
 // Verifica se é um cpf ou cnpj valido
 
 function isCPFCNPJValid(cpf_cnpj) {
-
     if (!isFilled(cpf_cnpj)) return false
 
     // Verifica se é cpf
-    if (cpf || cpf.length === 11
-        || cpf != "00000000000"
-        || cpf != "11111111111"
-        || cpf != "22222222222"
-        || cpf != "33333333333"
-        || cpf != "44444444444"
-        || cpf != "55555555555"
-        || cpf != "66666666666"
-        || cpf != "77777777777"
-        || cpf != "88888888888"
-        || cpf != "99999999999") {
+    if (cpf_cnpj && cpf_cnpj.length === 11
+        && cpf_cnpj != "00000000000"
+        && cpf_cnpj != "11111111111"
+        && cpf_cnpj != "22222222222"
+        && cpf_cnpj != "33333333333"
+        && cpf_cnpj != "44444444444"
+        && cpf_cnpj != "55555555555"
+        && cpf_cnpj != "66666666666"
+        && cpf_cnpj != "77777777777"
+        && cpf_cnpj != "88888888888"
+        && cpf_cnpj != "99999999999") {
 
+        console.log('entrei no cpf')
         var soma = 0
         var resto
 
         for (var i = 1; i <= 9; i++) {
-            soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i)
+            soma = soma + parseInt(cpf_cnpj.substring(i - 1, i)) * (11 - i)
         }
 
         resto = (soma * 10) % 11
@@ -97,13 +82,13 @@ function isCPFCNPJValid(cpf_cnpj) {
             resto = 0
         }
 
-        if (resto != parseInt(cpf.substring(9, 10))) {
+        if (resto != parseInt(cpf_cnpj.substring(9, 10))) {
             return false
         }
         soma = 0
 
         for (var i = 1; i <= 10; i++) {
-            soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i)
+            soma = soma + parseInt(cpf_cnpj.substring(i - 1, i)) * (12 - i)
         }
 
         resto = (soma * 10) % 11
@@ -112,31 +97,32 @@ function isCPFCNPJValid(cpf_cnpj) {
             resto = 0
         }
 
-        if (resto != parseInt(cpf.substring(10, 11))) {
+        if (resto != parseInt(cpf_cnpj.substring(10, 11))) {
             return false
         }
 
         return true
 
         //  Se não for um cpf, verifica se é cnpj
-    } else if (!cnpj || cnpj.length != 14
-        || cnpj == "00000000000000"
-        || cnpj == "11111111111111"
-        || cnpj == "22222222222222"
-        || cnpj == "33333333333333"
-        || cnpj == "44444444444444"
-        || cnpj == "55555555555555"
-        || cnpj == "66666666666666"
-        || cnpj == "77777777777777"
-        || cnpj == "88888888888888"
-        || cnpj == "99999999999999") {
-
+    } else if (!cpf_cnpj || cpf_cnpj.length != 14
+        || cpf_cnpj == "00000000000000"
+        || cpf_cnpj == "11111111111111"
+        || cpf_cnpj == "22222222222222"
+        || cpf_cnpj == "33333333333333"
+        || cpf_cnpj == "44444444444444"
+        || cpf_cnpj == "55555555555555"
+        || cpf_cnpj == "66666666666666"
+        || cpf_cnpj == "77777777777777"
+        || cpf_cnpj == "88888888888888"
+        || cpf_cnpj == "99999999999999") {
+        console.log('entrei onde não devia')
         return false
     }
+    console.log('entrei onde devia')
 
-    var tamanho = cnpj.length - 2
-    var numeros = cnpj.substring(0, tamanho)
-    var digitos = cnpj.substring(tamanho)
+    var tamanho = cpf_cnpj.length - 2
+    var numeros = cpf_cnpj.substring(0, tamanho)
+    var digitos = cpf_cnpj.substring(tamanho)
     var soma = 0
     var pos = tamanho - 7
 
@@ -154,7 +140,7 @@ function isCPFCNPJValid(cpf_cnpj) {
     }
 
     tamanho = tamanho + 1
-    numeros = cnpj.substring(0, tamanho)
+    numeros = cpf_cnpj.substring(0, tamanho)
     soma = 0
     pos = tamanho - 7
 
@@ -173,6 +159,85 @@ function isCPFCNPJValid(cpf_cnpj) {
 
     return true;
 }
+
+// Valida entrada do usuário no campo e-mail e informa erro caso tenha inserido algo fora do formato correto
+
+emailInput.addEventListener('blur', (event) => {
+    const inputValue = event.target.value
+
+    if (!isEmailValid(inputValue)) {
+        emailInput.setCustomValidity('error')
+    } else {
+        emailInput.setCustomValidity('')
+    }
+
+})
+
+// Impede que seja inserido algo difente de números pelo usuário e maior que um número de telefone padrão, onze digitos.
+
+phoneInput.addEventListener('keypress', (event) => {
+    const inputValue = event.target.value
+    const olyNumbers = /[0-9]/
+    const key = event.key
+
+    if (!olyNumbers.test(key) || inputValue.length > 10) {
+        event.preventDefault()
+
+        return
+    }
+})
+
+// Verifica e avisa caso o usuário preencher com menos caracteres que o necessario.
+
+phoneInput.addEventListener('blur', (event) => {
+    const inputValue = event.target.value
+    if (inputValue.length < 11) {
+        console.log(inputValue)
+        phoneInput.setCustomValidity('error')
+    } else {
+        phoneInput.setCustomValidity('')
+    }
+})
+
+// Impede que o usuário use caracteres que não são usados em CPFs e CNPJs
+
+cpf_cnpjInput.addEventListener('keypress', (event) => {
+    const inputValue = event.target.value
+    const olyNumbersAndSpecialCharacters = /[0-9.\-\/]/
+    const key = event.key
+
+    if (!olyNumbersAndSpecialCharacters.test(key)) {
+        event.preventDefault()
+
+        return
+    }
+})
+
+// Valida se CPF/CNPJ é está correto apos ser inserido.
+
+cpf_cnpjInput.addEventListener('blur', (event) => {
+    const inputValue = String(event.target.value).replace(/[^0-9]/g, '')
+    console.log("fora do if")
+
+
+    if (inputValue.length < 10) {
+        cpf_cnpjInput.setCustomValidity('error')
+        console.log("primeiro if")
+        return
+    } else if (isCPFCNPJValid(inputValue)) {
+        cpf_cnpjInput.setCustomValidity('')
+        console.log("segundo if")
+
+        return
+    } else {
+        console.log("else")
+
+        cpf_cnpjInput.setCustomValidity('error')
+
+        return
+    }
+})
+
 
 // Limita o usuario a enviar apenas números
 
