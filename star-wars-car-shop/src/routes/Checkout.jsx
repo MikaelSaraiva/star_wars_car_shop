@@ -16,7 +16,7 @@ const Checkout = () => {
       <h2>Infomações Pessoais</h2>
       <form id='personal-info'>
 
-        <Input type='text' text='Nome' name='name' required='true' />
+        <Input type='text' text='Nome' name='name' required='true' errorMessage='Digite um nome valido.' />
         <Input type='text' text='E-mail' name='email' required='true' errorMessage='Digite um email valido no formato email@email.com.' />
         <Input type='text' text='Telefone' name='phone' required='true' errorMessage='Digite um telefone sem caracteres especiais e com 11 digitos.' />
         <Input type='text' text='CPF/CNPJ' name='cpf_cnpj' required='true' errorMessage='CPF ou CNPJ invalido.' />
@@ -38,7 +38,7 @@ const Checkout = () => {
       <h2>Dados de pagamento</h2>
 
       <label htmlFor="paymeny-method">Metodo de pagamento</label>
-      <select name='paymeny-method' id='paymeny-method'>
+      <select name='Método de pagamento' id='paymeny-method' required>
         <option value="">Selecione o metodo de pagamento</option>
         <option value="payment-slip">Boleto</option>
         <option value="credit">Cartão de crédito</option>

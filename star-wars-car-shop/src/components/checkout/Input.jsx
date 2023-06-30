@@ -13,7 +13,7 @@ function Input({ type, text, name, placeholder, handleOnChange, value, errorMess
             <label htmlFor={name}>{text}</label>
             <input
                 type={type}
-                name={name}
+                name={text}
                 id={name}
                 placeholder={placeholder}
                 onChange={handleOnChange}

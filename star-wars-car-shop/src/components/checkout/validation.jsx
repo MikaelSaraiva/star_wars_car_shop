@@ -1,4 +1,5 @@
 // Componentes do formulario de informações pessoais
+const personalInfoForm = document.querySelector('#personal-info')
 
 const nameInput = document.querySelector('#name')
 const emailInput = document.querySelector('#email')
@@ -34,6 +35,8 @@ const cardCreditLogo = document.querySelector('#card-credit-logo')
 const expireInput = document.querySelector('#expire')
 const nameOnCardInput = document.querySelector('#name-on-card')
 const securityCodeInput = document.querySelector('#security-code')
+
+const confirmCheckoutButton = document.querySelector('#confirm-checkout')
 
 // Função para desabilitar/habilitar as caixas de texto do fomulario de endereço
 
@@ -596,4 +599,52 @@ securityCodeInput.addEventListener('blur', (event) => {
     }
 
     securityCodeInput.setCustomValidity('error')
+})
+
+// Faz a validação de todos os campos ao tentar confirmar compra
+
+confirmCheckoutButton.addEventListener('click', (event) => {
+    let alertMessage = ''
+
+    // Verifica se os campos de dados pessoais são validos e caso não adiciona o nome dele para o alerta
+
+    for (let index = 0; index < personalInfoForm.length; index++) {
+        if (!personalInfoForm[index].checkValidity()) {
+            document.querySelector(`#${personalInfoForm[index].id}`).setAttribute('focused', true)
+            alertMessage += `${personalInfoForm[index].name}\n`
+        }
+
+    }
+
+    if (!zipcodeInput.checkValidity()) {
+        zipcodeInput.setAttribute('focused', true)
+        alertMessage += `${zipcodeInput.name}\n`
+    }
+
+    for (let index = 0; index < addressForm.length; index++) {
+        if (!addressForm[index].checkValidity()) {
+            document.querySelector(`#${addressForm[index].id}`).setAttribute('focused', true)
+            alertMessage += `${addressForm[index].name}\n`
+        }
+
+    }
+
+    if (!paymentMethodSelect.checkValidity()) {
+        paymentMethodSelect.setAttribute('focused', true)
+        alertMessage += `${paymentMethodSelect.name}\n`
+    } else if (paymentMethodSelect.value === 'credit') {
+        for (let index = 0; index < creditForm.length; index++) {
+            if (!creditForm[index].checkValidity()) {
+                document.querySelector(`#${creditForm[index].id}`).setAttribute('focused', true)
+                alertMessage += `${creditForm[index].name}\n`
+            }
+
+        }
+    }
+
+    if (alertMessage.length) {
+        alert('Preencha o(s) seguinte(s) campo(s):\n\n' + alertMessage)
+    } else {
+        alert('Compra efetuada com sucesso. (Faça uma pagina bonita pra redirecionar aqui')
+    }
 })
